@@ -2,12 +2,12 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const cors = require("cors");
-const puppeteer = require('puppeteer');
-const path = require('path');
-const fs = require('fs');
+const puppeteer = require("puppeteer");
+const path = require("path");
+const fs = require("fs");
 
 const app = express();
-const port = 8000; // Make sure this matches your fetch URL
+const port = 5550; // Make sure this matches your fetch URL
 
 app.use(express.json());
 
@@ -79,8 +79,7 @@ app.post("/submit-form", async (req, res) => {
   }
 });
 
-
-app.post('/generate-invoice', async (req, res) => {
+app.post("/generate-invoice", async (req, res) => {
   const invoiceData = req.body;
 
   const htmlContent = `
@@ -287,8 +286,8 @@ app.post('/generate-invoice', async (req, res) => {
                     "
                   >
                          ${new Date(
-                  invoiceData["issue-date"]
-                ).toLocaleDateString()}
+                           invoiceData["issue-date"]
+                         ).toLocaleDateString()}
                   </td>
                 </tr>
                 <tr>
@@ -303,8 +302,8 @@ app.post('/generate-invoice', async (req, res) => {
                     "
                   >
                          ${new Date(
-                  invoiceData["due-date"]
-                ).toLocaleDateString()}
+                           invoiceData["due-date"]
+                         ).toLocaleDateString()}
                   </td>
                 </tr>
                 <tr style="border-left: 2px solid #000">
@@ -343,10 +342,14 @@ app.post('/generate-invoice', async (req, res) => {
                       (item, index) => `
                        <tr style="text-align: center">
                            <td>${index + 1}</td>
-                           <td> <strong>${item.title}</strong><br>${item.description}</td>
+                           <td> <strong>${item.title}</strong><br>${
+                        item.description
+                      }</td>
                            <td style="font-weight: 500">${item.quantity}</td>
                            <td>$${item.unit_price}</td>
-                           <td style="font-weight: 500; border-right: 0">$${item.total_price}</td>
+                           <td style="font-weight: 500; border-right: 0">$${
+                             item.total_price
+                           }</td>
                        </tr>
                        `
                     )
@@ -367,12 +370,11 @@ app.post('/generate-invoice', async (req, res) => {
                     </td>
                     <td style="text-align: center; width: 150px">HSN/SAC</td>
                     <td style="width: 174px; border-right: 0">$${invoiceData.items
-                    .reduce(
-                      (acc, item) =>
-                        acc + parseFloat(item.total_price),
-                      0
-                    )
-                    .toFixed(2)}</td>
+                      .reduce(
+                        (acc, item) => acc + parseFloat(item.total_price),
+                        0
+                      )
+                      .toFixed(2)}</td>
                   </tr>
                   <tr style="text-align: center">
                     <td colspan="5" class="text-right" style="height: 10px">
@@ -380,31 +382,31 @@ app.post('/generate-invoice', async (req, res) => {
                     </td>
                     <td style="width: 174px; border-right: 0">
                       <strong>$${invoiceData.items
-                                  .reduce(
-                                    (acc, item) =>
-                                      acc + parseFloat(item.total_price),
-                                    0
-                                  )
-                                  .toFixed(2)}</strong>
+                        .reduce(
+                          (acc, item) => acc + parseFloat(item.total_price),
+                          0
+                        )
+                        .toFixed(2)}</strong>
                     </td>
                   </tr>
                   <tr style="text-align: center">
                     <td colspan="5" class="text-right">
                       <span>Payment Received(USD)</span>
                     </td>
-                    <td style="border-right: 0">${invoiceData.payment_received || "-"}</td>
+                    <td style="border-right: 0">${
+                      invoiceData.payment_received || "-"
+                    }</td>
                   </tr>
                   <tr style="text-align: center">
                     <td colspan="5" class="text-right">
                       <span>Amount Due(USD)</span>
                     </td>
                     <td style="width: 174px; border-right: 0">$${invoiceData.items
-                                  .reduce(
-                                    (acc, item) =>
-                                      acc + parseFloat(item.total_price),
-                                    0
-                                  )
-                                  .toFixed(2)}</td>
+                      .reduce(
+                        (acc, item) => acc + parseFloat(item.total_price),
+                        0
+                      )
+                      .toFixed(2)}</td>
                   </tr>
                 </tbody>
               </table>
@@ -542,31 +544,33 @@ app.post('/generate-invoice', async (req, res) => {
   
   `;
 
-
-  
   try {
-      // Launch Puppeteer to generate PDF
-      const browser = await puppeteer.launch();
-      const page = await browser.newPage();
-      await page.setContent(htmlContent);
+    // Launch Puppeteer to generate PDF
+    const browser = await puppeteer.launch();
+    const page = await browser.newPage();
+    await page.setContent(htmlContent);
 
-      // Save PDF to a file in the 'invoices' directory
-      const pdfPath = path.join(__dirname, 'invoices', `invoice-${Date.now()}.pdf`);
-      await page.pdf({ path: pdfPath, format: 'A4', printBackground: true });
-      await browser.close();
+    // Save PDF to a file in the 'invoices' directory
+    const pdfPath = path.join(
+      __dirname,
+      "invoices",
+      `invoice-${Date.now()}.pdf`
+    );
+    await page.pdf({ path: pdfPath, format: "A4", printBackground: true });
+    await browser.close();
 
-      // Send the path of the saved PDF back to the client
-      res.status(200).json({ message: 'Invoice generated and saved.', path: pdfPath });
+    // Send the path of the saved PDF back to the client
+    res
+      .status(200)
+      .json({ message: "Invoice generated and saved.", path: pdfPath });
   } catch (error) {
-      console.error('Error generating PDF:', error);
-      res.status(500).send('Error generating PDF');
+    console.error("Error generating PDF:", error);
+    res.status(500).send("Error generating PDF");
   }
 });
 
-
-
 // Ensure the 'invoices' directory exists
-const invoicesDir = path.join(__dirname, 'invoices');
+const invoicesDir = path.join(__dirname, "invoices");
 if (!fs.existsSync(invoicesDir)) {
   fs.mkdirSync(invoicesDir);
 }
@@ -577,19 +581,19 @@ function convertNumberToWords(amount) {
   return numberToWords.toWords(amount);
 }
 
-app.get('/download-pdf/:filename', (req, res) => {
+app.get("/download-pdf/:filename", (req, res) => {
   const filename = req.params.filename;
-  const filePath = path.join(__dirname, 'invoices', filename);
+  const filePath = path.join(__dirname, "invoices", filename);
 
   if (fs.existsSync(filePath)) {
-      res.setHeader('Content-Type', 'application/pdf');
-      res.setHeader('Content-Disposition', `attachment; filename=${filename}`);
-      res.sendFile(filePath);
+    res.setHeader("Content-Type", "application/pdf");
+    res.setHeader("Content-Disposition", `attachment; filename=${filename}`);
+    res.sendFile(filePath);
   } else {
-      res.status(404).send('File not found');
+    res.status(404).send("File not found");
   }
 });
 
 app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`);
-});
+}); 
