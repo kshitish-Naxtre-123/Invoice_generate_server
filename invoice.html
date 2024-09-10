@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tax Invoice</title>
+
+
+    <style>
+      body {
+        background-color: #f8f9fa;
+        font-family: sans-serif;
+        /* padding: 20px 0px; */
+      }
+      p {
+        font-size: 15px;
+        padding-left: 5px;
+        font-weight: 500;
+      }
+
+      .invoice-box {
+        max-width: 700px;
+        margin: auto;
+        padding: 30px;
+        border: 1px solid #1a1717;
+        background-color: #fff;
+      }
+
+      .invoice-title {
+        font-size: 28px;
+        font-weight: bold;
+        margin-bottom: 20px;
+      }
+
+      .table {
+        width: 100%;
+        border-collapse: collapse;
+        /* border: 2px solid #000; */
+      }
+
+      .table td,
+      .table th {
+        padding: 4px;
+        vertical-align: middle;
+        border: 2px solid #000;
+        border-left: 0;
+      }
+
+      .table th {
+        background-color: #f2f2f2;
+        font-weight: 500;
+      }
+      /* 
+      .table-bordered {
+      } */
+
+      .text-right {
+        text-align: right;
+      }
+
+      .text-center {
+        text-align: center;
+      }
+
+      .bank-details,
+      .receiver-info {
+        font-size: 14px;
+        margin-top: 20px;
+      }
+
+      .amount-words {
+        margin-top: 20px;
+        font-weight: bold;
+      }
+      .bill-section-border {
+        border-bottom: 2px solid #000;
+        border-right: 2px solid #000;
+      }
+      .bill-div {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 12px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="invoice-box">
+      <div style="border: 2px solid black">
+        <div class="bill-div" style="padding-bottom: 10px">
+          <div
+            class="col-md-5 bill-section-border"
+            style="padding-left: 0px; padding-right: 0; padding-top: 5px"
+          >
+            <h6 style="border-bottom: 2px solid #000;margin-top: 0;">
+              <strong
+                style="padding-left: 10px; font-size: 18px; font-weight: 600"
+                >Bill to:</strong
+              >
+            </h6>
+            <p style="padding-left: 10px">
+              Kind Attn: Webomaze Pty Ltd<br />
+              <strong> Webomaze Pty Ltd</strong><br />
+              Level 2/1 Southbank Blvd, Southbank, Victoria, Australia
+            </p>
+            <p style="font-weight: 700; padding-left: 10px">GST Number :</p>
+          </div>
+
+          <div>
+            <h6 style="font-size: 18px; margin-top: 5px; margin-bottom: 15px;display: flex;justify-content: flex-end;align-items: center;">
+              <strong style="padding-right: 8px; padding-top: 8px"
+                >Tax Invoice</strong
+              >
+            </h6>
+            <table style="border-collapse: collapse">
+              <tr>
+                <td style="border: 2px solid #000; padding: 5px">
+                  Invoice Number:
+                </td>
+                <td
+                  style="
+                    border: 2px solid #000;
+                    border-right: none;
+                    padding: 5px;
+                  "
+                >
+                  EXP/23-24/23
+                </td>
+              </tr>
+              <tr>
+                <td style="border: 2px solid #000; padding: 5px">
+                  Issue Date:
+                </td>
+                <td
+                  style="
+                    border: 2px solid #000;
+                    border-right: none;
+                    padding: 5px;
+                  "
+                >
+                  01/Sep/2024
+                </td>
+              </tr>
+              <tr>
+                <td style="border: 2px solid #000; padding: 5px">Due Date:</td>
+                <td
+                  style="
+                    border: 2px solid #000;
+                    border-right: none;
+                    padding: 5px;
+                  "
+                >
+                  02/Sep/2024
+                </td>
+              </tr>
+              <tr style="border-left: 2px solid #000">
+                <td style="padding-left: 3px">Ref: 23</td>
+              </tr>
+              <tr
+                style="
+                  border-left: 2px solid #000;
+                  border-bottom: 2px solid #000;
+                "
+              >
+                <td style="padding-left: 3px">Dated: 01/Sep/2024</td>
+              </tr>
+            </table>
+          </div>
+        </div>
+
+        <div class="row mt-3">
+          <div class="col-md-12" style="padding: 0">
+            <table class="table table-bordered">
+              <thead style="text-align: center">
+                <tr>
+                  <th>S.No.</th>
+                  <th>Description</th>
+                  <th>Quantity</th>
+                  <th>Unit Price(USD)</th>
+                  <th style="border-right: 0 ;width: 174px;">Total (USD)</th>
+                </tr>
+              </thead>
+              <tbody class="table-body">
+                <tr style="text-align: center">
+                  <td>1</td>
+                  <td>
+                    <strong>Seo Digital Marketing</strong><br />September 2024
+                  </td>
+                  <td>1</td>
+                  <td style="font-weight: 500">$12,957</td>
+                  <td style="font-weight: 500; border-right: 0">$12,957</td>
+                </tr>
+                <tr style="text-align: center">
+                  <td>2</td>
+                  <td>
+                    <strong>Seo Digital Marketing</strong><br />September 2024
+                  </td>
+                  <td>1</td>
+                  <td style="font-weight: 500">$12,957</td>
+                  <td style="font-weight: 500; border-right: 0">$12,957</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="row mt-3" style="margin-top: 30px">
+          <div class="col-md-12" style="padding: 0">
+            <table class="table table-bordered">
+              <tbody class="table-body">
+                <tr style="text-align: center">
+                  <td colspan="4" class="text-right">
+                    <span>Sub Total(USD)</span>
+                  </td>
+                  <td style="text-align: center; width: 205px">HSN/SAC</td>
+                  <td style="width: 174px;border-right: 0;">$25,551</td>
+                </tr>
+                <tr style="text-align: center">
+                  <td colspan="5" class="text-right" style="height: 10px">
+                    <strong>Total Amount(USD)</strong>
+                  </td>
+                  <td style="width: 174px;border-right: 0;"><strong>$25,551</strong></td>
+                </tr>
+                <tr style="text-align: center">
+                  <td colspan="5" class="text-right">
+                    <span>Payment Received(USD)</span>
+                  </td>
+                  <td style="border-right: 0;">-</td>
+                </tr>
+                <tr style="text-align: center">
+                  <td colspan="5" class="text-right">
+                    <span>Amount Due(USD)</span>
+                  </td>
+                  <td style="width: 174px;border-right: 0;">$25,551</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="row mt-3">
+          <div class="col-md-12">
+            <p style="font-size: 17px;">
+              <strong
+                >Total Amount (in words): Twenty Five Thousands Five Hundred and
+                Fifty One Dollars only
+              </strong>
+            </p>
+          </div>
+        </div>
+        <div
+          style="
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+          "
+        >
+          <p>For Naxtrre Technologies Private Limited</p>
+          <div style="text-align: right; padding: 0">
+            <table
+              style="
+                border: 1px solid black;
+                border-collapse: collapse;
+                display: inline-block;
+              "
+            >
+              <tr>
+                <td style="border: 2px solid black; padding: 5px;">
+                  PAN Number:
+                </td>
+                <td style="border: 2px solid black; padding: 5px; border-right: 0">
+                  AAICN9805F
+                </td>
+              </tr>
+              <tr>
+                <td style="border: 2px solid black; padding: 5px">
+                  GST Number:
+                </td>
+                <td style="border: 2px solid black; padding: 5px;border-right: 0;">
+                  03AAICN9805F1ZL
+                </td>
+              </tr>
+            </table>
+          </div>
+        </div>
+
+        <div class="row mt-3">
+          <div class="col-md-12">
+            <p style="margin-bottom: 0.6rem">
+              Payment by direct bank transfer is preferred and remittance shall
+              be made to:
+            </p>
+            <p>
+              Account Holder Name:
+              <strong>Technologies Private Limited</strong> , Account
+              Number:<strong> 99999464764194</strong>, HDFC BANK LTD, (HDFC
+              Bank, (SCO No 33 Phase :- 7 Industrial Area Mohali)) SWIFT Code:
+              <strong>HDFCINBBXXX</strong> - IFSC Code:
+              <strong>HDFC0006642</strong>. All disputes subject to SAS Nagar
+              (Mohali) jurisdiction
+            </p>
+            <p>
+              <strong>
+                Kindly send us back the Invoice copy duly Signed and with
+                Company Seal.</strong
+              >
+            </p>
+            <p>
+              <span style="font-weight: 600">Receiver Name:</span><br />
+              <span style="font-weight: 600">Receiver Signature:</span> <br />
+              <span style="font-weight: 600">Department:</span> <br />
+              <span style="font-weight: 600">Received Date:</span>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
