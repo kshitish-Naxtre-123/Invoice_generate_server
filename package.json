@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "server": "nodemon server/index.js"
+    "server": "nodemon server/index.js",
+      "postinstall": "puppeteer install"
+
   },
   "keywords": [],
   "author": "",
