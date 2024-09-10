@@ -14,11 +14,14 @@
     "cors": "^2.8.5",
     "express": "^4.19.2",
     "html-pdf": "^3.0.1",
+    "html-to-pdfmake": "^2.5.13",
     "mongodb": "^6.8.0",
     "mongoose": "^8.6.1",
     "nodemon": "^3.1.4",
     "number-to-words": "^1.2.4",
     "pdfkit": "^0.15.0",
-    "puppeteer": "^23.3.0"
+    "pdfmake": "^0.2.12",
+    "puppeteer": "^23.3.0",
+    "wkhtmltopdf": "^0.4.0"
   }
 }
