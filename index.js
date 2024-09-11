@@ -1015,23 +1015,38 @@ app.post("/generate-wh-invoice", async (req, res) => {
 
   try {
     // Launch Puppeteer to generate PDF
-    const browser = await puppeteer.launch();
+    const browser = await puppeteer.launch({
+      headless: true
+    });
     const page = await browser.newPage();
     await page.setContent(htmlContent);
 
-    // Save PDF to a file in the 'invoices' directory
-    const pdfPath = path.join(
-      __dirname,
-      "invoices",
-      `invoice-${Date.now()}.pdf`
-    );
-    await page.pdf({ path: pdfPath, format: "A4", printBackground: true });
+    // Generate PDF and store it in memory
+    const pdfBuffer = await page.pdf({ format: "A4", printBackground: true });
     await browser.close();
 
-    // Send the path of the saved PDF back to the client
-    res
-      .status(200)
-      .json({ message: "Invoice generated and saved.", path: pdfPath });
+    // Convert Buffer to Readable Stream
+    const bufferStream = new Readable();
+    bufferStream.push(pdfBuffer);
+    bufferStream.push(null);
+
+    // Generate a unique name for the PDF using Date.now()
+    const timestamp = Date.now();
+    const publicId = `invoice_${timestamp}`;
+
+    // Upload PDF to Cloudinary with custom public_id
+    cloudinary.uploader.upload_stream(
+      { resource_type: 'raw', format: 'pdf', public_id: publicId },
+      (error, result) => {
+        if (error) {
+          console.error("Error uploading PDF to Cloudinary:", error);
+          return res.status(500).send("Error uploading PDF to Cloudinary");
+        }
+
+        // Send the URL of the uploaded PDF back to the client
+        res.status(200).json({ message: "Invoice generated and uploaded.", url: result.secure_url });
+      }
+    ).end(pdfBuffer);
   } catch (error) {
     console.error("Error generating PDF:", error);
     res.status(500).send("Error generating PDF");
@@ -1050,18 +1065,7 @@ function convertNumberToWords(amount) {
   return numberToWords.toWords(amount || 0);
 }
 
-app.get("/download-pdf/:filename", (req, res) => {
-  const filename = req.params.filename;
-  const filePath = path.join(__dirname, "invoices", filename);
 
-  if (fs.existsSync(filePath)) {
-    res.setHeader("Content-Type", "application/pdf");
-    res.setHeader("Content-Disposition", `attachment; filename=${filename}`);
-    res.sendFile(filePath);
-  } else {
-    res.status(404).send("File not found");
-  }
-});
 
 app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`);
