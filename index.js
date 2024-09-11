@@ -43,7 +43,7 @@ const invoiceSchema = new mongoose.Schema({
   items: [
     {
       title: String,
-      description: String,
+      description: String,  
       quantity: Number,
       unit_price: String,
       total_price: String,
@@ -555,14 +555,7 @@ app.post("/generate-invoice", async (req, res) => {
   try {
     // Launch Puppeteer to generate PDF
     const browser = await puppeteer.launch({
-      args: [
-        '--no-sandbox',
-        '--disable-setuid-sandbox',
-        '--disable-gpu',
-        '--disable-dev-shm-usage',
-        '--disable-software-rasterizer'
-      ],
-      headless: true,
+      headless: true
     });
     const page = await browser.newPage();
     await page.setContent(htmlContent);
@@ -581,41 +574,24 @@ app.post("/generate-invoice", async (req, res) => {
     const publicId = `invoice_${timestamp}`;
 
     // Upload PDF to Cloudinary with custom public_id
-    cloudinary.uploader
-      .upload_stream(
-        { resource_type: "raw", format: "pdf", public_id: publicId },
-        (error, result) => {
-          if (error) {
-            console.error("Error uploading PDF to Cloudinary:", error);
-            return res.status(500).send("Error uploading PDF to Cloudinary");
-          }
-
-          // Send the URL of the uploaded PDF back to the client
-          res
-            .status(200)
-            .json({
-              message: "Invoice generated and uploaded.",
-              url: result.secure_url,
-            });
+    cloudinary.uploader.upload_stream(
+      { resource_type: 'raw', format: 'pdf', public_id: publicId },
+      (error, result) => {
+        if (error) {
+          console.error("Error uploading PDF to Cloudinary:", error);
+          return res.status(500).send("Error uploading PDF to Cloudinary");
         }
-      )
-      .end(pdfBuffer);
+
+        // Send the URL of the uploaded PDF back to the client
+        res.status(200).json({ message: "Invoice generated and uploaded.", url: result.secure_url });
+      }
+    ).end(pdfBuffer);
   } catch (error) {
     console.error("Error generating PDF:", error);
     res.status(500).send("Error generating PDF");
   }
+
 });
-
-
-
-
-
-
-
-
-
-
-
 
 app.post("/generate-wh-invoice", async (req, res) => {
   const invoiceData = req.body;
