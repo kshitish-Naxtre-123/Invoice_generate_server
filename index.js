@@ -5,6 +5,14 @@ const cors = require("cors");
 const puppeteer = require("puppeteer");
 const path = require("path");
 const fs = require("fs");
+const cloudinary = require("cloudinary").v2;
+const { Readable } = require("stream");
+
+cloudinary.config({
+  cloud_name: "dffvqcoin",
+  api_key: "967494288262447",
+  api_secret: "SmuqM-8vynRBZc0ayT0t05-MinY",
+});
 
 const app = express();
 const port = 5550; // Make sure this matches your fetch URL
@@ -550,23 +558,37 @@ app.post("/generate-invoice", async (req, res) => {
     const page = await browser.newPage();
     await page.setContent(htmlContent);
 
-    // Save PDF to a file in the 'invoices' directory
-    const pdfPath = path.join(
-      __dirname,
-      "invoices",
-      `invoice-${Date.now()}.pdf`
-    );
-    await page.pdf({ path: pdfPath, format: "A4", printBackground: true });
+    // Generate PDF and store it in memory
+    const pdfBuffer = await page.pdf({ format: "A4", printBackground: true });
     await browser.close();
 
-    // Send the path of the saved PDF back to the client
-    res
-      .status(200)
-      .json({ message: "Invoice generated and saved.", path: pdfPath });
+    // Convert Buffer to Readable Stream
+    const bufferStream = new Readable();
+    bufferStream.push(pdfBuffer);
+    bufferStream.push(null);
+
+    // Generate a unique name for the PDF using Date.now()
+    const timestamp = Date.now();
+    const publicId = `invoice_${timestamp}`;
+
+    // Upload PDF to Cloudinary with custom public_id
+    cloudinary.uploader.upload_stream(
+      { resource_type: 'raw', format: 'pdf', public_id: publicId },
+      (error, result) => {
+        if (error) {
+          console.error("Error uploading PDF to Cloudinary:", error);
+          return res.status(500).send("Error uploading PDF to Cloudinary");
+        }
+
+        // Send the URL of the uploaded PDF back to the client
+        res.status(200).json({ message: "Invoice generated and uploaded.", url: result.secure_url });
+      }
+    ).end(pdfBuffer);
   } catch (error) {
     console.error("Error generating PDF:", error);
     res.status(500).send("Error generating PDF");
   }
+
 });
 
 app.post("/generate-wh-invoice", async (req, res) => {
@@ -1023,7 +1045,7 @@ if (!fs.existsSync(invoicesDir)) {
 function convertNumberToWords(amount) {
   // You can use a library like `number-to-words` or write your own conversion logic
   const numberToWords = require("number-to-words");
-  return numberToWords.toWords(amount || 0 );
+  return numberToWords.toWords(amount || 0);
 }
 
 app.get("/download-pdf/:filename", (req, res) => {
