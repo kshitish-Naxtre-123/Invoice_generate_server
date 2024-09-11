@@ -43,7 +43,7 @@ const invoiceSchema = new mongoose.Schema({
   items: [
     {
       title: String,
-      description: String,
+      description: String,  
       quantity: Number,
       unit_price: String,
       total_price: String,
@@ -554,7 +554,9 @@ app.post("/generate-invoice", async (req, res) => {
 
   try {
     // Launch Puppeteer to generate PDF
-    const browser = await puppeteer.launch();
+    const browser = await puppeteer.launch({
+      args: ['--no-sandbox', '--disable-setuid-sandbox']
+    });
     const page = await browser.newPage();
     await page.setContent(htmlContent);
 
